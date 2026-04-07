@@ -78,3 +78,24 @@ export async function refresh(req: Request, res: Response): Promise<void> {
     res.status(500).json({ message: '서버 오류가 발생했습니다' });
   }
 }
+
+export async function oauthLogin(req: Request, res: Response): Promise<void> {
+  try {
+    const { email, nickname, provider, oauthId } = req.body;
+
+    if (!email || !nickname || !provider || !oauthId) {
+      res.status(400).json({ message: 'OAuth 정보가 부족합니다' });
+      return;
+    }
+
+    const result = await authService.oauthLogin(email, nickname, provider, oauthId);
+    res.json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      res.status(error.statusCode).json({ message: error.message });
+      return;
+    }
+    console.error('OAuth login error:', error);
+    res.status(500).json({ message: '서버 오류가 발생했습니다' });
+  }
+}

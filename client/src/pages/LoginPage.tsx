@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
-  const { login, isAuthenticated, sessionMessage, clearSessionMessage } = useAuth();
+  const { login, loginWithKakao, isAuthenticated, sessionMessage, clearSessionMessage } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -80,6 +80,18 @@ export default function LoginPage() {
             disabled={submitting}
           >
             {submitting ? '로그인 중...' : '로그인'}
+          </button>
+
+          <div className={styles.divider}>
+            <span>또는</span>
+          </div>
+
+          <button
+            type="button"
+            className={styles.kakaoBtn}
+            onClick={loginWithKakao}
+          >
+            💬 카카오로 로그인
           </button>
 
           <p className={styles.link}>

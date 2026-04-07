@@ -100,3 +100,40 @@
 .link a:hover {
   text-decoration: underline;
 }
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.divider span {
+  padding: 0 0.75rem;
+}
+
+.kakaoBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #fee500;
+  color: #191919;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.kakaoBtn:hover {
+  background: #fdd835;
+}

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import apiClient, { setSessionExpiredHandler } from '../api/client';
+import { supabase } from '../api/supabase';
 
 interface User {
   id: string;
@@ -13,6 +14,7 @@ interface AuthContextValue {
   isLoading: boolean;
   sessionMessage: string | null;
   login: (email: string, password: string) => Promise<void>;
+  loginWithKakao: () => Promise<void>;
   register: (email: string, password: string, nickname: string) => Promise<void>;
   logout: () => Promise<void>;
   clearSessionMessage: () => void;
@@ -37,6 +39,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setIsLoading(false);
+
+    // Handle Supabase OAuth callback
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const su = session.user;
+        const email = su.email || '';
+        const nickname = su.user_metadata?.name || su.user_metadata?.full_name || email.split('@')[0];
+        const oauthId = su.id;
+
+        try {
+          const { data } = await apiClient.post('/auth/oauth', {
+            email, nickname, provider: 'kakao', oauthId,
+          });
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          setUser(data.user);
+          setSessionMessage(null);
+        } catch {
+          // OAuth backend sync failed
+        }
+        // Sign out from Supabase (we use our own JWT)
+        await supabase.auth.signOut();
+      }
+    });
   }, []);
 
   // Register session expiry handler
@@ -55,6 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('user', JSON.stringify(data.user));
     setUser(data.user);
     setSessionMessage(null);
+  }, []);
+
+  const loginWithKakao = useCallback(async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: { redirectTo: window.location.origin + '/dashboard' },
+    });
   }, []);
 
   const register = useCallback(async (email: string, password: string, nickname: string) => {
@@ -89,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         sessionMessage,
         login,
+        loginWithKakao,
         register,
         logout,
         clearSessionMessage,

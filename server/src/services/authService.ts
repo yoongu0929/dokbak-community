@@ -102,6 +102,29 @@ export function refresh(refreshToken: string) {
   return { accessToken: newAccessToken };
 }
 
+export async function oauthLogin(email: string, nickname: string, provider: string, oauthId: string) {
+  // Find or create user
+  let user = await userRepository.findByOAuth(provider, oauthId);
+  if (!user) {
+    // Check if email already exists (link accounts)
+    user = await userRepository.findByEmail(email);
+    if (!user) {
+      user = await userRepository.createOAuthUser(email, nickname, provider, oauthId);
+    }
+  }
+
+  const payload: TokenPayload = { userId: user.id, email: user.email };
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
+  refreshTokenStore.add(refreshToken);
+
+  return {
+    accessToken,
+    refreshToken,
+    user: { id: user.id, email: user.email, nickname: user.nickname },
+  };
+}
+
 export class AuthError extends Error {
   statusCode: number;
   constructor(message: string, statusCode: number) {
