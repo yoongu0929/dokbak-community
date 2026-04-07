@@ -1,0 +1,17 @@
+.container { min-height: 100vh; padding: 1.5rem; background: #f5f5f5; }
+.content { max-width: 800px; margin: 0 auto; }
+.title { font-size: 1.5rem; color: #333; margin: 0 0 1.5rem; }
+.list { display: flex; flex-direction: column; gap: 0.5rem; }
+.item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff; border-radius: 8px; padding: 0.75rem 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); cursor: pointer;
+  transition: box-shadow 0.2s; min-height: 44px;
+}
+.item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.pinned { border-left: 4px solid #e53935; background: #fff8f8; }
+.itemTitle { font-size: 0.95rem; font-weight: 600; color: #333; flex: 1; }
+.pinBadge { margin-right: 0.4rem; }
+.itemDate { font-size: 0.8rem; color: #888; white-space: nowrap; margin-left: 0.75rem; }
+.empty { color: #888; font-size: 0.9rem; padding: 1rem 0; }
+.loading { text-align: center; color: #888; padding: 3rem 1rem; }

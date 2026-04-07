@@ -10,6 +10,8 @@ import PostEditPage from './pages/PostEditPage';
 import RankingPage from './pages/RankingPage';
 import RankingArchivePage from './pages/RankingArchivePage';
 import MyPage from './pages/MyPage';
+import NoticeListPage from './pages/NoticeListPage';
+import NoticeDetailPage from './pages/NoticeDetailPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResponsiveLayout from './components/ResponsiveLayout';
 
@@ -60,6 +62,14 @@ const router = createBrowserRouter([
       {
         path: '/mypage',
         element: <ProtectedRoute><MyPage /></ProtectedRoute>,
+      },
+      {
+        path: '/notices',
+        element: <ProtectedRoute><NoticeListPage /></ProtectedRoute>,
+      },
+      {
+        path: '/notices/:id',
+        element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute>,
       },
       {
         path: '/',

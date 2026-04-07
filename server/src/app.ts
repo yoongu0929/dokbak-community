@@ -25,12 +25,14 @@ import postRouter from './routes/postRoutes';
 import dashboardRouter from './routes/dashboardRoutes';
 import rankingRouter from './routes/rankingRoutes';
 import rewardRouter from './routes/rewardRoutes';
+import noticeRouter from './routes/noticeRoutes';
 
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/ranking', rankingRouter);
 app.use('/api/rewards', rewardRouter);
+app.use('/api/notices', noticeRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

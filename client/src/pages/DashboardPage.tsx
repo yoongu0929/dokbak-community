@@ -68,6 +68,12 @@ export default function DashboardPage() {
       <div className={styles.content}>
         <h1 className={styles.welcome}>{nickname}님, 환영합니다!</h1>
 
+        {/* 공지 배너 */}
+        <div className={styles.noticeBanner} onClick={() => navigate('/notices')} role="link" tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter') navigate('/notices'); }}>
+          📢 공지사항을 확인해주세요
+        </div>
+
         {/* 최근 게시글 */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>최근 게시글</h2>
