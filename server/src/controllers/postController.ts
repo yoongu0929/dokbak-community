@@ -15,7 +15,8 @@ export async function listPosts(req: Request, res: Response): Promise<void> {
   try {
     const page = parseInt(req.query.page as string, 10) || 1;
     const search = req.query.search as string | undefined;
-    const result = await postService.listPosts(page, search);
+    const ageCategory = req.query.age_category as string | undefined;
+    const result = await postService.listPosts(page, search, ageCategory);
     res.json(result);
   } catch (error) {
     handleError(error, res);
@@ -35,17 +36,11 @@ export async function getPost(req: Request, res: Response): Promise<void> {
 
 export async function createPost(req: Request, res: Response): Promise<void> {
   try {
-    const { title, content, is_tip_event, location_name, latitude, longitude, image_url } = req.body;
+    const { title, content, is_tip_event, location_name, latitude, longitude, image_url, age_category, facilities } = req.body;
     const authorId = req.user!.userId;
     const post = await postService.createPost(
-      authorId,
-      title,
-      content,
-      is_tip_event ?? false,
-      location_name,
-      latitude,
-      longitude,
-      image_url
+      authorId, title, content, is_tip_event ?? false,
+      location_name, latitude, longitude, image_url, age_category, facilities
     );
     res.status(201).json(post);
   } catch (error) {
@@ -55,17 +50,11 @@ export async function createPost(req: Request, res: Response): Promise<void> {
 
 export async function updatePost(req: Request, res: Response): Promise<void> {
   try {
-    const { title, content, is_tip_event, location_name, latitude, longitude, image_url } = req.body;
+    const { title, content, is_tip_event, location_name, latitude, longitude, image_url, age_category, facilities } = req.body;
     const postId = req.params.id as string;
     const post = await postService.updatePost(
-      postId,
-      title,
-      content,
-      is_tip_event ?? false,
-      location_name,
-      latitude,
-      longitude,
-      image_url
+      postId, title, content, is_tip_event ?? false,
+      location_name, latitude, longitude, image_url, age_category, facilities
     );
     res.json(post);
   } catch (error) {

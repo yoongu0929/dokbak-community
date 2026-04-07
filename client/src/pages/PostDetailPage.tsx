@@ -4,6 +4,7 @@ import apiClient from '../api/client';
 import { useAuth } from '../hooks/useAuth';
 import LikeButton from '../components/LikeButton';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { AGE_CATEGORY_MAP, FACILITY_OPTIONS } from '../constants/ageCategories';
 import styles from './PostDetailPage.module.css';
 
 interface PostDetail {
@@ -19,6 +20,13 @@ interface PostDetail {
   latitude: number | null;
   longitude: number | null;
   image_url: string | null;
+  age_category: string | null;
+  has_nursing_room: boolean;
+  has_diaper_station: boolean;
+  has_stroller_access: boolean;
+  has_kids_menu: boolean;
+  has_playground: boolean;
+  cleanliness_rating: number | null;
   created_at: string;
 }
 
@@ -87,6 +95,7 @@ export default function PostDetailPage() {
         <div className={styles.header}>
           <h1 className={styles.title}>{post.title}</h1>
           {post.is_tip_event && <span className={styles.tipBadge}>🍯 꿀팁</span>}
+          {post.age_category && <span className={styles.ageBadge}>{AGE_CATEGORY_MAP[post.age_category]}</span>}
         </div>
 
         <div className={styles.meta}>
@@ -112,6 +121,21 @@ export default function PostDetailPage() {
             >
               📍 {post.location_name}
             </a>
+          </div>
+        )}
+
+        {(post.has_nursing_room || post.has_diaper_station || post.has_stroller_access || post.has_kids_menu || post.has_playground || post.cleanliness_rating) && (
+          <div className={styles.facilityInfo}>
+            <div className={styles.facilityTags}>
+              {post.has_nursing_room && <span className={styles.facilityTag}>🤱 수유실</span>}
+              {post.has_diaper_station && <span className={styles.facilityTag}>🚼 기저귀 교환대</span>}
+              {post.has_stroller_access && <span className={styles.facilityTag}>🛒 유모차 접근</span>}
+              {post.has_kids_menu && <span className={styles.facilityTag}>🍽️ 키즈 메뉴</span>}
+              {post.has_playground && <span className={styles.facilityTag}>🛝 놀이시설</span>}
+            </div>
+            {post.cleanliness_rating && (
+              <span className={styles.cleanlinessDisplay}>🧹 청결도 {'★'.repeat(post.cleanliness_rating)}{'☆'.repeat(5 - post.cleanliness_rating)}</span>
+            )}
           </div>
         )}
 

@@ -11,6 +11,13 @@ export interface PostRow {
   latitude: number | null;
   longitude: number | null;
   image_url: string | null;
+  age_category: string | null;
+  has_nursing_room: boolean;
+  has_diaper_station: boolean;
+  has_stroller_access: boolean;
+  has_kids_menu: boolean;
+  has_playground: boolean;
+  cleanliness_rating: number | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -29,16 +36,24 @@ const PAGE_SIZE = 10;
 
 export async function findAll(
   page: number,
-  search?: string
+  search?: string,
+  ageCategory?: string
 ): Promise<PostListResult> {
   const offset = (page - 1) * PAGE_SIZE;
   const params: unknown[] = [];
-  let whereClause = '';
+  const conditions: string[] = [];
 
   if (search) {
     params.push(`%${search}%`);
-    whereClause = `WHERE p.title ILIKE $1 OR p.content ILIKE $1`;
+    conditions.push(`(p.title ILIKE $${params.length} OR p.content ILIKE $${params.length})`);
   }
+
+  if (ageCategory) {
+    params.push(ageCategory);
+    conditions.push(`p.age_category = $${params.length}`);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
   const countQuery = `SELECT COUNT(*) FROM post p ${whereClause}`;
   const countResult = await pool.query(countQuery, params);
@@ -85,13 +100,16 @@ export async function create(
   locationName?: string | null,
   latitude?: number | null,
   longitude?: number | null,
-  imageUrl?: string | null
+  imageUrl?: string | null,
+  ageCategory?: string | null,
+  facilities?: { hasNursingRoom?: boolean; hasDiaperStation?: boolean; hasStrollerAccess?: boolean; hasKidsMenu?: boolean; hasPlayground?: boolean; cleanlinessRating?: number | null }
 ): Promise<PostRow> {
+  const f = facilities || {};
   const result = await pool.query<PostRow>(
-    `INSERT INTO post (author_id, title, content, is_tip_event, location_name, latitude, longitude, image_url)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `INSERT INTO post (author_id, title, content, is_tip_event, location_name, latitude, longitude, image_url, age_category, has_nursing_room, has_diaper_station, has_stroller_access, has_kids_menu, has_playground, cleanliness_rating)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
-    [authorId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null]
+    [authorId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null, ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
   );
   return result.rows[0];
 }
@@ -104,14 +122,17 @@ export async function update(
   locationName?: string | null,
   latitude?: number | null,
   longitude?: number | null,
-  imageUrl?: string | null
+  imageUrl?: string | null,
+  ageCategory?: string | null,
+  facilities?: { hasNursingRoom?: boolean; hasDiaperStation?: boolean; hasStrollerAccess?: boolean; hasKidsMenu?: boolean; hasPlayground?: boolean; cleanlinessRating?: number | null }
 ): Promise<PostRow> {
+  const f = facilities || {};
   const result = await pool.query<PostRow>(
     `UPDATE post
-     SET title = $2, content = $3, is_tip_event = $4, location_name = $5, latitude = $6, longitude = $7, image_url = $8, updated_at = NOW()
+     SET title = $2, content = $3, is_tip_event = $4, location_name = $5, latitude = $6, longitude = $7, image_url = $8, age_category = $9, has_nursing_room = $10, has_diaper_station = $11, has_stroller_access = $12, has_kids_menu = $13, has_playground = $14, cleanliness_rating = $15, updated_at = NOW()
      WHERE id = $1
      RETURNING *`,
-    [postId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null]
+    [postId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null, ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
   );
   return result.rows[0];
 }

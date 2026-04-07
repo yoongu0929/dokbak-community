@@ -4,6 +4,7 @@ import apiClient from '../api/client';
 import PostCard from '../components/PostCard';
 import Pagination from '../components/Pagination';
 import SearchBar from '../components/SearchBar';
+import { AGE_CATEGORIES } from '../constants/ageCategories';
 import styles from './PostListPage.module.css';
 
 interface Post {
@@ -12,6 +13,7 @@ interface Post {
   author_nickname: string;
   like_count: number;
   is_tip_event: boolean;
+  age_category: string | null;
   created_at: string;
 }
 
@@ -25,13 +27,15 @@ export default function PostListPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [pagination, setPagination] = useState<PaginationData>({ page: 1, totalPages: 1, totalCount: 0 });
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const fetchPosts = useCallback(async (page: number, keyword: string) => {
+  const fetchPosts = useCallback(async (page: number, keyword: string, category: string) => {
     setLoading(true);
     try {
       const params: Record<string, string | number> = { page };
       if (keyword) params.search = keyword;
+      if (category) params.age_category = category;
       const { data } = await apiClient.get('/posts', { params });
       setPosts(data.posts);
       setPagination(data.pagination);
@@ -43,17 +47,22 @@ export default function PostListPage() {
   }, []);
 
   useEffect(() => {
-    fetchPosts(pagination.page, search);
+    fetchPosts(pagination.page, search, selectedCategory);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = (keyword: string) => {
     setSearch(keyword);
-    fetchPosts(1, keyword);
+    fetchPosts(1, keyword, selectedCategory);
   };
 
   const handlePageChange = (page: number) => {
-    fetchPosts(page, search);
+    fetchPosts(page, search, selectedCategory);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    fetchPosts(1, search, category);
   };
 
   return (
@@ -66,6 +75,19 @@ export default function PostListPage() {
 
         <div className={styles.searchWrap}>
           <SearchBar onSearch={handleSearch} initialValue={search} />
+        </div>
+
+        <div className={styles.categoryTabs}>
+          <button
+            className={`${styles.categoryTab} ${selectedCategory === '' ? styles.categoryTabActive : ''}`}
+            onClick={() => handleCategoryChange('')}
+          >전체</button>
+          {AGE_CATEGORIES.map((cat) => (
+            <button key={cat.value}
+              className={`${styles.categoryTab} ${selectedCategory === cat.value ? styles.categoryTabActive : ''}`}
+              onClick={() => handleCategoryChange(cat.value)}
+            >{cat.emoji} {cat.label}</button>
+          ))}
         </div>
 
         {loading ? (

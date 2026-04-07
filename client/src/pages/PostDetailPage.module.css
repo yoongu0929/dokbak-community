@@ -146,3 +146,42 @@
   border-radius: 8px;
   border: 1px solid #e0e0e0;
 }
+
+.ageBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  background: #e8eaf6;
+  color: #283593;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.facilityInfo {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.facilityTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.facilityTag {
+  display: inline-block;
+  font-size: 0.8rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+}
+
+.cleanlinessDisplay {
+  font-size: 0.85rem;
+  color: #f57f17;
+}
