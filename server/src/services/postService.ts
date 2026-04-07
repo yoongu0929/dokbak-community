@@ -62,7 +62,8 @@ export async function updatePost(
 }
 
 export async function deletePost(postId: string) {
-  return postRepository.remove(postId);
+  const imageUrls = await postRepository.remove(postId);
+  return { imageUrls };
 }
 
 export async function toggleLike(postId: string, userId: string) {

@@ -125,8 +125,12 @@ export async function update(
   return result.rows[0];
 }
 
-export async function remove(postId: string): Promise<void> {
-  await pool.query('DELETE FROM post WHERE id = $1', [postId]);
+export async function remove(postId: string): Promise<string[]> {
+  const result = await pool.query<{ image_urls: string[] }>(
+    'DELETE FROM post WHERE id = $1 RETURNING image_urls',
+    [postId]
+  );
+  return result.rows[0]?.image_urls ?? [];
 }
 
 export async function toggleLike(

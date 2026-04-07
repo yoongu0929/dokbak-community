@@ -17,3 +17,16 @@ export async function uploadPostImage(file: Blob, fileName: string): Promise<str
   const { data } = supabase.storage.from('post-images').getPublicUrl(path);
   return data.publicUrl;
 }
+
+export async function deletePostImages(imageUrls: string[]): Promise<void> {
+  const paths = imageUrls
+    .map((url) => {
+      const match = url.match(/post-images\/(.+)$/);
+      return match ? match[1] : null;
+    })
+    .filter((p): p is string => p !== null);
+
+  if (paths.length > 0) {
+    await supabase.storage.from('post-images').remove(paths);
+  }
+}

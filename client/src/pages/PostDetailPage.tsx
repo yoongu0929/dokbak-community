@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api/client';
+import { deletePostImages } from '../api/supabase';
 import { useAuth } from '../hooks/useAuth';
 import LikeButton from '../components/LikeButton';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -71,7 +72,10 @@ export default function PostDetailPage() {
 
   const handleDelete = async () => {
     try {
-      await apiClient.delete(`/posts/${id}`);
+      const { data } = await apiClient.delete(`/posts/${id}`);
+      if (data.imageUrls && data.imageUrls.length > 0) {
+        await deletePostImages(data.imageUrls).catch(() => {});
+      }
       navigate('/posts', { replace: true });
     } catch {
       setError('삭제에 실패했습니다.');

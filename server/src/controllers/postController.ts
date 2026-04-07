@@ -65,8 +65,8 @@ export async function updatePost(req: Request, res: Response): Promise<void> {
 export async function deletePost(req: Request, res: Response): Promise<void> {
   try {
     const postId = req.params.id as string;
-    await postService.deletePost(postId);
-    res.json({ message: '게시글이 삭제되었습니다' });
+    const { imageUrls } = await postService.deletePost(postId);
+    res.json({ message: '게시글이 삭제되었습니다', imageUrls });
   } catch (error) {
     handleError(error, res);
   }
