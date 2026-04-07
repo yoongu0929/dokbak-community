@@ -32,7 +32,6 @@ button,
 input[type='submit'],
 input[type='button'],
 input[type='reset'] {
-  min-width: 44px;
   min-height: 44px;
 }
 
