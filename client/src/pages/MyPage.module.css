@@ -1,0 +1,160 @@
+.container {
+  min-height: 100vh;
+  padding: 1.5rem;
+  background: #f5f5f5;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 1.5rem;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #4a90d9;
+}
+
+.myRankCard {
+  background: #e3f2fd;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.myRankStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.myRankLabel {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.myRankValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1565c0;
+}
+
+.rewardList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rewardItem {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  gap: 0.75rem;
+  min-height: 44px;
+}
+
+.rewardBadge {
+  font-size: 1.25rem;
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.rewardInfo {
+  flex: 1;
+  overflow: hidden;
+}
+
+.rewardDescription {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.rewardMeta {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.rewardType {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #fff;
+  background: #4a90d9;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.postItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  min-height: 44px;
+}
+
+.postTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.75rem;
+}
+
+.postMeta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.emptyText {
+  color: #888;
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 3rem 1rem;
+}
+
+.error {
+  text-align: center;
+  color: #d32f2f;
+  padding: 2rem 1rem;
+}

@@ -1,0 +1,157 @@
+.container {
+  min-height: 100vh;
+  padding: 1.5rem;
+  background: #f5f5f5;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.backLink {
+  font-size: 0.9rem;
+  color: #4a90d9;
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.monthSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.monthSelector label {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.monthInput {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+
+.yearMonth {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 1rem;
+}
+
+.rankList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rankItem {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  gap: 0.75rem;
+  min-height: 44px;
+}
+
+.rankItem.topRank {
+  border-left: 4px solid #ffc107;
+}
+
+.rankBadge {
+  font-size: 1.25rem;
+  min-width: 2.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.rankNumber {
+  font-size: 1rem;
+  min-width: 2.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: #888;
+}
+
+.rankInfo {
+  flex: 1;
+  overflow: hidden;
+}
+
+.rankTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankMeta {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.likeCount {
+  font-size: 0.9rem;
+  color: #e53935;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.finalizedBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.emptyText {
+  color: #888;
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 3rem 1rem;
+}
+
+.error {
+  text-align: center;
+  color: #d32f2f;
+  padding: 2rem 1rem;
+}

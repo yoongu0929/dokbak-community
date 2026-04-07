@@ -1,0 +1,120 @@
+.container {
+  min-height: 100vh;
+  padding: 1.5rem;
+  background: #f5f5f5;
+}
+
+.card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #4a90d9;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  flex: 1;
+}
+
+.tipBadge {
+  font-size: 0.8rem;
+  background: #fff3e0;
+  color: #e65100;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+}
+
+.body {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  margin-bottom: 1.5rem;
+  min-height: 100px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.editBtn {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.editBtn:hover {
+  background: #bbdefb;
+}
+
+.deleteBtn {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.deleteBtn:hover {
+  background: #ffcdd2;
+}
+
+.loading {
+  text-align: center;
+  color: #888;
+  padding: 3rem 1rem;
+}
+
+.error {
+  text-align: center;
+  color: #d32f2f;
+  padding: 3rem 1rem;
+}

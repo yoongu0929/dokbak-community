@@ -1,0 +1,54 @@
+/* ResponsiveLayout - responsive wrapper (Req 5.1, 5.2, 5.3, 5.6) */
+
+.layout {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Mobile: <768px - single column (Req 5.1) */
+@media (max-width: 767px) {
+  .container {
+    max-width: 100%;
+    padding: 0.75rem;
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Tablet: 768px - 1023px - 2 columns (Req 5.2) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    max-width: 768px;
+    padding: 1rem 1.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+}
+
+/* Desktop: >=1024px - full width (Req 5.3) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+    padding: 1.5rem 2rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
