@@ -10,7 +10,7 @@ export interface PostRow {
   location_name: string | null;
   latitude: number | null;
   longitude: number | null;
-  image_url: string | null;
+  image_urls: string[];
   age_category: string | null;
   has_nursing_room: boolean;
   has_diaper_station: boolean;
@@ -93,46 +93,34 @@ export async function findById(
 }
 
 export async function create(
-  authorId: string,
-  title: string,
-  content: string,
-  isTipEvent: boolean,
-  locationName?: string | null,
-  latitude?: number | null,
-  longitude?: number | null,
-  imageUrl?: string | null,
-  ageCategory?: string | null,
+  authorId: string, title: string, content: string, isTipEvent: boolean,
+  locationName?: string | null, latitude?: number | null, longitude?: number | null,
+  imageUrls?: string[], ageCategory?: string | null,
   facilities?: { hasNursingRoom?: boolean; hasDiaperStation?: boolean; hasStrollerAccess?: boolean; hasKidsMenu?: boolean; hasPlayground?: boolean; cleanlinessRating?: number | null }
 ): Promise<PostRow> {
   const f = facilities || {};
   const result = await pool.query<PostRow>(
-    `INSERT INTO post (author_id, title, content, is_tip_event, location_name, latitude, longitude, image_url, age_category, has_nursing_room, has_diaper_station, has_stroller_access, has_kids_menu, has_playground, cleanliness_rating)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+    `INSERT INTO post (author_id, title, content, is_tip_event, location_name, latitude, longitude, image_urls, age_category, has_nursing_room, has_diaper_station, has_stroller_access, has_kids_menu, has_playground, cleanliness_rating)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
-    [authorId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null, ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
+    [authorId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, JSON.stringify(imageUrls ?? []), ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
   );
   return result.rows[0];
 }
 
 export async function update(
-  postId: string,
-  title: string,
-  content: string,
-  isTipEvent: boolean,
-  locationName?: string | null,
-  latitude?: number | null,
-  longitude?: number | null,
-  imageUrl?: string | null,
-  ageCategory?: string | null,
+  postId: string, title: string, content: string, isTipEvent: boolean,
+  locationName?: string | null, latitude?: number | null, longitude?: number | null,
+  imageUrls?: string[], ageCategory?: string | null,
   facilities?: { hasNursingRoom?: boolean; hasDiaperStation?: boolean; hasStrollerAccess?: boolean; hasKidsMenu?: boolean; hasPlayground?: boolean; cleanlinessRating?: number | null }
 ): Promise<PostRow> {
   const f = facilities || {};
   const result = await pool.query<PostRow>(
     `UPDATE post
-     SET title = $2, content = $3, is_tip_event = $4, location_name = $5, latitude = $6, longitude = $7, image_url = $8, age_category = $9, has_nursing_room = $10, has_diaper_station = $11, has_stroller_access = $12, has_kids_menu = $13, has_playground = $14, cleanliness_rating = $15, updated_at = NOW()
+     SET title = $2, content = $3, is_tip_event = $4, location_name = $5, latitude = $6, longitude = $7, image_urls = $8::jsonb, age_category = $9, has_nursing_room = $10, has_diaper_station = $11, has_stroller_access = $12, has_kids_menu = $13, has_playground = $14, cleanliness_rating = $15, updated_at = NOW()
      WHERE id = $1
      RETURNING *`,
-    [postId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, imageUrl ?? null, ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
+    [postId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null, JSON.stringify(imageUrls ?? []), ageCategory ?? null, f.hasNursingRoom ?? false, f.hasDiaperStation ?? false, f.hasStrollerAccess ?? false, f.hasKidsMenu ?? false, f.hasPlayground ?? false, f.cleanlinessRating ?? null]
   );
   return result.rows[0];
 }

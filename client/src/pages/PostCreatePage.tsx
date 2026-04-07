@@ -31,8 +31,8 @@ export default function PostCreatePage() {
     hasKidsMenu: false, hasPlayground: false,
   });
   const [cleanlinessRating, setCleanlinessRating] = useState<number>(0);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -63,15 +63,16 @@ export default function PostCreatePage() {
 
     setSubmitting(true);
     try {
-      let imageUrl: string | null = null;
-      if (imageFile) {
-        const resized = await resizeImage(imageFile);
-        imageUrl = await uploadPostImage(resized, imageFile.name.replace(/\.[^.]+$/, '.jpg'));
+      const imageUrls: string[] = [];
+      for (const file of imageFiles) {
+        const resized = await resizeImage(file);
+        const url = await uploadPostImage(resized, file.name.replace(/\.[^.]+$/, '.jpg'));
+        imageUrls.push(url);
       }
       const { data } = await apiClient.post('/posts', {
         title: title.trim(), content: content.trim(), is_tip_event: isTipEvent,
         location_name: locationName || null, latitude, longitude,
-        image_url: imageUrl, age_category: ageCategory || null,
+        image_urls: imageUrls, age_category: ageCategory || null,
         facilities: { ...facilities, cleanlinessRating: cleanlinessRating || null },
       });
       navigate(`/posts/${data.id}`);
@@ -114,23 +115,33 @@ export default function PostCreatePage() {
             🍯 꿀팁 이벤트 참여
           </label>
 
-          {/* 사진 첨부 */}
+          {/* 사진 첨부 (최대 5장) */}
           <div className={styles.imageSection}>
-            <label>🖼️ 사진 첨부</label>
-            {imagePreview ? (
-              <div className={styles.imagePreviewWrap}>
-                <img src={imagePreview} alt="미리보기" className={styles.imagePreview} />
-                <button type="button" className={styles.locationRemoveBtn} onClick={() => { setImageFile(null); setImagePreview(null); }}>✕</button>
-              </div>
-            ) : (
-              <label className={styles.imageUploadBtn}>
-                사진 선택
-                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) { setImageFile(file); setImagePreview(URL.createObjectURL(file)); }
-                }} />
-              </label>
-            )}
+            <label>🖼️ 사진 첨부 ({imagePreviews.length}/5)</label>
+            <div className={styles.imageGrid}>
+              {imagePreviews.map((preview, idx) => (
+                <div key={idx} className={styles.imagePreviewWrap}>
+                  <img src={preview} alt={`미리보기 ${idx + 1}`} className={styles.imagePreview} />
+                  <button type="button" className={styles.imageRemoveBtn} onClick={() => {
+                    setImageFiles((prev) => prev.filter((_, i) => i !== idx));
+                    setImagePreviews((prev) => prev.filter((_, i) => i !== idx));
+                  }}>✕</button>
+                </div>
+              ))}
+              {imagePreviews.length < 5 && (
+                <label className={styles.imageUploadBtn}>
+                  + 사진 추가
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file && imageFiles.length < 5) {
+                      setImageFiles((prev) => [...prev, file]);
+                      setImagePreviews((prev) => [...prev, URL.createObjectURL(file)]);
+                    }
+                    e.target.value = '';
+                  }} />
+                </label>
+              )}
+            </div>
           </div>
 
           {/* 위치 검색 */}

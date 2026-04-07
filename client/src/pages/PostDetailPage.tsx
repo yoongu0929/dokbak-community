@@ -19,7 +19,7 @@ interface PostDetail {
   location_name: string | null;
   latitude: number | null;
   longitude: number | null;
-  image_url: string | null;
+  image_urls: string[];
   age_category: string | null;
   has_nursing_room: boolean;
   has_diaper_station: boolean;
@@ -105,9 +105,11 @@ export default function PostDetailPage() {
 
         <div className={styles.body}>{post.content}</div>
 
-        {post.image_url && (
-          <div className={styles.postImage}>
-            <img src={post.image_url} alt="게시글 이미지" />
+        {post.image_urls && post.image_urls.length > 0 && (
+          <div className={styles.postImages}>
+            {post.image_urls.map((url: string, idx: number) => (
+              <img key={idx} src={url} alt={`게시글 이미지 ${idx + 1}`} className={styles.postImage} />
+            ))}
           </div>
         )}
 
