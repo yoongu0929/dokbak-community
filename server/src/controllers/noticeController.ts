@@ -13,7 +13,7 @@ export async function listNotices(_req: Request, res: Response): Promise<void> {
 
 export async function getNotice(req: Request, res: Response): Promise<void> {
   try {
-    const notice = await noticeRepository.findById(req.params.id);
+    const notice = await noticeRepository.findById(req.params.id as string);
     if (!notice) {
       res.status(404).json({ message: '공지사항을 찾을 수 없습니다' });
       return;
