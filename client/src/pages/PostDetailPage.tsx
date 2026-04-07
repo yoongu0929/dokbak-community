@@ -18,6 +18,7 @@ interface PostDetail {
   location_name: string | null;
   latitude: number | null;
   longitude: number | null;
+  image_url: string | null;
   created_at: string;
 }
 
@@ -94,6 +95,12 @@ export default function PostDetailPage() {
         </div>
 
         <div className={styles.body}>{post.content}</div>
+
+        {post.image_url && (
+          <div className={styles.postImage}>
+            <img src={post.image_url} alt="게시글 이미지" />
+          </div>
+        )}
 
         {post.location_name && (
           <div className={styles.locationTag}>

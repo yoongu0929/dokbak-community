@@ -136,3 +136,13 @@
 .locationLink:hover {
   text-decoration: underline;
 }
+
+.postImage {
+  margin: 1rem 0;
+}
+
+.postImage img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}

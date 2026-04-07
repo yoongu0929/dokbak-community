@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
+import { resizeImage } from '../utils/imageResize';
+import { uploadPostImage } from '../api/supabase';
 import styles from './PostCreatePage.module.css';
 
 export default function PostCreatePage() {
@@ -12,6 +14,8 @@ export default function PostCreatePage() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locating, setLocating] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -26,6 +30,12 @@ export default function PostCreatePage() {
 
     setSubmitting(true);
     try {
+      let imageUrl: string | null = null;
+      if (imageFile) {
+        const resized = await resizeImage(imageFile);
+        imageUrl = await uploadPostImage(resized, imageFile.name.replace(/\.[^.]+$/, '.jpg'));
+      }
+
       const { data } = await apiClient.post('/posts', {
         title: title.trim(),
         content: content.trim(),
@@ -33,6 +43,7 @@ export default function PostCreatePage() {
         location_name: locationName || null,
         latitude,
         longitude,
+        image_url: imageUrl,
       });
       navigate(`/posts/${data.id}`);
     } catch {
@@ -78,6 +89,38 @@ export default function PostCreatePage() {
             />
             🍯 꿀팁 이벤트 참여
           </label>
+
+          <div className={styles.imageSection}>
+            <label>🖼️ 사진 첨부</label>
+            {imagePreview ? (
+              <div className={styles.imagePreviewWrap}>
+                <img src={imagePreview} alt="미리보기" className={styles.imagePreview} />
+                <button
+                  type="button"
+                  className={styles.locationRemoveBtn}
+                  onClick={() => { setImageFile(null); setImagePreview(null); }}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <label className={styles.imageUploadBtn}>
+                사진 선택
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImageFile(file);
+                      setImagePreview(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+              </label>
+            )}
+          </div>
 
           <div className={styles.locationSection}>
             <label>📍 위치 공유</label>

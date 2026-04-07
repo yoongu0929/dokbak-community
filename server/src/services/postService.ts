@@ -38,12 +38,13 @@ export async function createPost(
   isTipEvent: boolean = false,
   locationName?: string | null,
   latitude?: number | null,
-  longitude?: number | null
+  longitude?: number | null,
+  imageUrl?: string | null
 ) {
   if (!title || !content || !title.trim() || !content.trim()) {
     throw new PostError('제목과 본문을 모두 입력해주세요', 400);
   }
-  return postRepository.create(authorId, title.trim(), content.trim(), isTipEvent, locationName, latitude, longitude);
+  return postRepository.create(authorId, title.trim(), content.trim(), isTipEvent, locationName, latitude, longitude, imageUrl);
 }
 
 export async function updatePost(
@@ -53,12 +54,13 @@ export async function updatePost(
   isTipEvent: boolean = false,
   locationName?: string | null,
   latitude?: number | null,
-  longitude?: number | null
+  longitude?: number | null,
+  imageUrl?: string | null
 ) {
   if (!title || !content || !title.trim() || !content.trim()) {
     throw new PostError('제목과 본문을 모두 입력해주세요', 400);
   }
-  return postRepository.update(postId, title.trim(), content.trim(), isTipEvent, locationName, latitude, longitude);
+  return postRepository.update(postId, title.trim(), content.trim(), isTipEvent, locationName, latitude, longitude, imageUrl);
 }
 
 export async function deletePost(postId: string) {
