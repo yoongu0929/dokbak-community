@@ -35,13 +35,16 @@ export async function getPost(req: Request, res: Response): Promise<void> {
 
 export async function createPost(req: Request, res: Response): Promise<void> {
   try {
-    const { title, content, is_tip_event } = req.body;
+    const { title, content, is_tip_event, location_name, latitude, longitude } = req.body;
     const authorId = req.user!.userId;
     const post = await postService.createPost(
       authorId,
       title,
       content,
-      is_tip_event ?? false
+      is_tip_event ?? false,
+      location_name,
+      latitude,
+      longitude
     );
     res.status(201).json(post);
   } catch (error) {
@@ -51,13 +54,16 @@ export async function createPost(req: Request, res: Response): Promise<void> {
 
 export async function updatePost(req: Request, res: Response): Promise<void> {
   try {
-    const { title, content, is_tip_event } = req.body;
+    const { title, content, is_tip_event, location_name, latitude, longitude } = req.body;
     const postId = req.params.id as string;
     const post = await postService.updatePost(
       postId,
       title,
       content,
-      is_tip_event ?? false
+      is_tip_event ?? false,
+      location_name,
+      latitude,
+      longitude
     );
     res.json(post);
   } catch (error) {

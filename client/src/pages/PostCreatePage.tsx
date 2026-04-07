@@ -8,6 +8,10 @@ export default function PostCreatePage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isTipEvent, setIsTipEvent] = useState(false);
+  const [locationName, setLocationName] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [locating, setLocating] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -26,6 +30,9 @@ export default function PostCreatePage() {
         title: title.trim(),
         content: content.trim(),
         is_tip_event: isTipEvent,
+        location_name: locationName || null,
+        latitude,
+        longitude,
       });
       navigate(`/posts/${data.id}`);
     } catch {
@@ -71,6 +78,57 @@ export default function PostCreatePage() {
             />
             🍯 꿀팁 이벤트 참여
           </label>
+
+          <div className={styles.locationSection}>
+            <label>📍 위치 공유</label>
+            {locationName ? (
+              <div className={styles.locationInfo}>
+                <span className={styles.locationText}>{locationName}</span>
+                <button
+                  type="button"
+                  className={styles.locationRemoveBtn}
+                  onClick={() => { setLocationName(''); setLatitude(null); setLongitude(null); }}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={styles.locationBtn}
+                disabled={locating}
+                onClick={async () => {
+                  if (!navigator.geolocation) {
+                    setError('이 브라우저에서는 위치 공유를 지원하지 않습니다.');
+                    return;
+                  }
+                  setLocating(true);
+                  navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                      const lat = pos.coords.latitude;
+                      const lng = pos.coords.longitude;
+                      setLatitude(lat);
+                      setLongitude(lng);
+                      try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ko`);
+                        const data = await res.json();
+                        setLocationName(data.display_name?.split(',').slice(0, 3).join(', ') || `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                      } catch {
+                        setLocationName(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                      }
+                      setLocating(false);
+                    },
+                    () => {
+                      setError('위치 정보를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+                      setLocating(false);
+                    }
+                  );
+                }}
+              >
+                {locating ? '위치 가져오는 중...' : '현재 위치 추가'}
+              </button>
+            )}
+          </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.cancelBtn} onClick={() => navigate('/posts')}>

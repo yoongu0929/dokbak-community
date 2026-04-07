@@ -116,3 +116,66 @@
 .cancelBtn:hover {
   background: #d0d0d0;
 }
+
+.locationSection {
+  margin: 0.75rem 0;
+}
+
+.locationSection label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.locationBtn {
+  padding: 0.5rem 1rem;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  color: #1565c0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.locationBtn:hover {
+  background: #bbdefb;
+}
+
+.locationBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.locationInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f1f8e9;
+  border: 1px solid #c5e1a5;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+.locationText {
+  flex: 1;
+  font-size: 0.85rem;
+  color: #33691e;
+}
+
+.locationRemoveBtn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.locationRemoveBtn:hover {
+  color: #d32f2f;
+}

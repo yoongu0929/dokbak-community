@@ -7,6 +7,9 @@ export interface PostRow {
   content: string;
   is_tip_event: boolean;
   like_count: number;
+  location_name: string | null;
+  latitude: number | null;
+  longitude: number | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -77,13 +80,16 @@ export async function create(
   authorId: string,
   title: string,
   content: string,
-  isTipEvent: boolean
+  isTipEvent: boolean,
+  locationName?: string | null,
+  latitude?: number | null,
+  longitude?: number | null
 ): Promise<PostRow> {
   const result = await pool.query<PostRow>(
-    `INSERT INTO post (author_id, title, content, is_tip_event)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO post (author_id, title, content, is_tip_event, location_name, latitude, longitude)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
      RETURNING *`,
-    [authorId, title, content, isTipEvent]
+    [authorId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null]
   );
   return result.rows[0];
 }
@@ -92,14 +98,17 @@ export async function update(
   postId: string,
   title: string,
   content: string,
-  isTipEvent: boolean
+  isTipEvent: boolean,
+  locationName?: string | null,
+  latitude?: number | null,
+  longitude?: number | null
 ): Promise<PostRow> {
   const result = await pool.query<PostRow>(
     `UPDATE post
-     SET title = $2, content = $3, is_tip_event = $4, updated_at = NOW()
+     SET title = $2, content = $3, is_tip_event = $4, location_name = $5, latitude = $6, longitude = $7, updated_at = NOW()
      WHERE id = $1
      RETURNING *`,
-    [postId, title, content, isTipEvent]
+    [postId, title, content, isTipEvent, locationName ?? null, latitude ?? null, longitude ?? null]
   );
   return result.rows[0];
 }

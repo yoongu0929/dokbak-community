@@ -15,6 +15,9 @@ interface PostDetail {
   like_count: number;
   user_liked: boolean;
   is_tip_event: boolean;
+  location_name: string | null;
+  latitude: number | null;
+  longitude: number | null;
   created_at: string;
 }
 
@@ -91,6 +94,19 @@ export default function PostDetailPage() {
         </div>
 
         <div className={styles.body}>{post.content}</div>
+
+        {post.location_name && (
+          <div className={styles.locationTag}>
+            <a
+              href={`https://maps.google.com/?q=${post.latitude},${post.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.locationLink}
+            >
+              📍 {post.location_name}
+            </a>
+          </div>
+        )}
 
         <div className={styles.footer}>
           <LikeButton liked={post.user_liked} count={post.like_count} onClick={handleLike} disabled={liking} />
