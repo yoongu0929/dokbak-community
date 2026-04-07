@@ -78,6 +78,10 @@ export default function RankingPage() {
           </span>
         </p>
 
+        <div className={styles.rewardBanner}>
+          🎁 1등 시 푸짐한 상품이 전달됩니다!
+        </div>
+
         {data.rankings.length === 0 ? (
           <p className={styles.emptyText}>이번 달 꿀팁 게시글이 없습니다.</p>
         ) : (
