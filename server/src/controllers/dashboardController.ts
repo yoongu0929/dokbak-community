@@ -16,7 +16,7 @@ export async function getDashboard(
   res: Response
 ): Promise<void> {
   try {
-    const userId = req.user!.userId;
+    const userId = req.user?.userId;
     const result = await dashboardService.getDashboard(userId);
     res.json(result);
   } catch (error) {

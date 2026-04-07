@@ -4,10 +4,11 @@ import { authMiddleware } from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.use(authMiddleware);
-
+// 공개 API
 router.get('/current', rankingController.getCurrentRanking);
 router.get('/archive/:yearMonth', rankingController.getArchivedRanking);
-router.get('/my', rankingController.getMyRanking);
+
+// 인증 필요
+router.get('/my', authMiddleware, rankingController.getMyRanking);
 
 export default router;

@@ -17,26 +17,30 @@ function getCurrentYearMonth(): string {
   return `${year}-${month}`;
 }
 
-export async function getDashboard(userId: string) {
-  const user = await userRepository.findById(userId);
-  if (!user) {
-    throw new DashboardError('사용자를 찾을 수 없습니다', 404);
-  }
-
+export async function getDashboard(userId?: string) {
   const yearMonth = getCurrentYearMonth();
 
-  const [recentPosts, topRanking, myRanking] = await Promise.all([
+  let nickname = '방문자';
+  let myRankingResult = null;
+
+  if (userId) {
+    const user = await userRepository.findById(userId);
+    if (user) {
+      nickname = user.nickname;
+      const rank = await dashboardRepository.findUserTipRank(userId, yearMonth);
+      myRankingResult = rank ? { likeCount: rank.like_count, rank: rank.rank } : null;
+    }
+  }
+
+  const [recentPosts, topRanking] = await Promise.all([
     dashboardRepository.findRecentPosts(5),
     dashboardRepository.findTopTipPostsForMonth(yearMonth, 3),
-    dashboardRepository.findUserTipRank(userId, yearMonth),
   ]);
 
   return {
-    user: { nickname: user.nickname },
+    user: { nickname },
     recentPosts,
     topRanking,
-    myRanking: myRanking
-      ? { likeCount: myRanking.like_count, rank: myRanking.rank }
-      : null,
+    myRanking: myRankingResult,
   };
 }

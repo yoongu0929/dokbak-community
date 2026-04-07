@@ -31,10 +31,14 @@ const router = createBrowserRouter([
     children: [
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
-      {
-        path: '/dashboard',
-        element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
-      },
+      // 공개 페이지 (로그인 없이 접근 가능)
+      { path: '/dashboard', element: <DashboardPage /> },
+      { path: '/', element: <DashboardPage /> },
+      { path: '/notices', element: <NoticeListPage /> },
+      { path: '/notices/:id', element: <NoticeDetailPage /> },
+      { path: '/ranking', element: <RankingPage /> },
+      { path: '/ranking/archive/:yearMonth', element: <RankingArchivePage /> },
+      // 보호 페이지 (로그인 필요)
       {
         path: '/posts',
         element: <ProtectedRoute><PostListPage /></ProtectedRoute>,
@@ -52,28 +56,8 @@ const router = createBrowserRouter([
         element: <ProtectedRoute><PostEditPage /></ProtectedRoute>,
       },
       {
-        path: '/ranking',
-        element: <ProtectedRoute><RankingPage /></ProtectedRoute>,
-      },
-      {
-        path: '/ranking/archive/:yearMonth',
-        element: <ProtectedRoute><RankingArchivePage /></ProtectedRoute>,
-      },
-      {
         path: '/mypage',
         element: <ProtectedRoute><MyPage /></ProtectedRoute>,
-      },
-      {
-        path: '/notices',
-        element: <ProtectedRoute><NoticeListPage /></ProtectedRoute>,
-      },
-      {
-        path: '/notices/:id',
-        element: <ProtectedRoute><NoticeDetailPage /></ProtectedRoute>,
-      },
-      {
-        path: '/',
-        element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
       },
     ],
   },
