@@ -55,7 +55,7 @@ export async function register(
 
 export async function login(email: string, password: string) {
   const user = await userRepository.findByEmail(email);
-  if (!user) {
+  if (!user || !user.password_hash) {
     throw new AuthError('이메일 또는 비밀번호가 올바르지 않습니다', 401);
   }
 
