@@ -26,6 +26,7 @@ import dashboardRouter from './routes/dashboardRoutes';
 import rankingRouter from './routes/rankingRoutes';
 import rewardRouter from './routes/rewardRoutes';
 import noticeRouter from './routes/noticeRoutes';
+import meetupRouter from './routes/meetupRoutes';
 
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postRouter);
@@ -33,6 +34,7 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/ranking', rankingRouter);
 app.use('/api/rewards', rewardRouter);
 app.use('/api/notices', noticeRouter);
+app.use('/api/meetups', meetupRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

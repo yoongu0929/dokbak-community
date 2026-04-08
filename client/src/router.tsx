@@ -12,6 +12,9 @@ import RankingArchivePage from './pages/RankingArchivePage';
 import MyPage from './pages/MyPage';
 import NoticeListPage from './pages/NoticeListPage';
 import NoticeDetailPage from './pages/NoticeDetailPage';
+import MeetupListPage from './pages/MeetupListPage';
+import MeetupDetailPage from './pages/MeetupDetailPage';
+import MeetupCreatePage from './pages/MeetupCreatePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResponsiveLayout from './components/ResponsiveLayout';
 
@@ -58,6 +61,18 @@ const router = createBrowserRouter([
       {
         path: '/mypage',
         element: <ProtectedRoute><MyPage /></ProtectedRoute>,
+      },
+      {
+        path: '/meetups',
+        element: <ProtectedRoute><MeetupListPage /></ProtectedRoute>,
+      },
+      {
+        path: '/meetups/new',
+        element: <ProtectedRoute><MeetupCreatePage /></ProtectedRoute>,
+      },
+      {
+        path: '/meetups/:id',
+        element: <ProtectedRoute><MeetupDetailPage /></ProtectedRoute>,
       },
     ],
   },

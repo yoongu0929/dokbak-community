@@ -36,6 +36,7 @@ export default function Header() {
               <Link to="/dashboard" className={styles.navLink}>대시보드</Link>
               <Link to="/notices" className={styles.navLink}>공지</Link>
               <Link to="/posts" className={styles.navLink}>게시판</Link>
+              <Link to="/meetups" className={styles.navLink}>벙개</Link>
               <Link to="/ranking" className={styles.navLink}>랭킹</Link>
               <Link to="/mypage" className={styles.navLink}>마이페이지</Link>
               <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
@@ -74,6 +75,7 @@ export default function Header() {
             <Link to="/dashboard" className={styles.mobileNavLink} onClick={closeMenu}>대시보드</Link>
             <Link to="/notices" className={styles.mobileNavLink} onClick={closeMenu}>공지</Link>
             <Link to="/posts" className={styles.mobileNavLink} onClick={closeMenu}>게시판</Link>
+            <Link to="/meetups" className={styles.mobileNavLink} onClick={closeMenu}>벙개</Link>
             <Link to="/ranking" className={styles.mobileNavLink} onClick={closeMenu}>랭킹</Link>
             <Link to="/mypage" className={styles.mobileNavLink} onClick={closeMenu}>마이페이지</Link>
             <button type="button" className={styles.mobileLogoutBtn} onClick={handleLogout}>
