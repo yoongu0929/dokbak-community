@@ -30,6 +30,7 @@ interface DashboardData {
   recentPosts: RecentPost[];
   topRanking: RankingPost[];
   myRanking: MyRanking | null;
+  upcomingMeetups: { id: string; title: string; author_nickname: string; meet_date: string; location_name: string | null; rsvp_count: number }[];
 }
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
@@ -149,6 +150,29 @@ export default function DashboardPage() {
             </div>
           ) : (
             <p className={styles.emptyText}>이번 달 꿀팁 이벤트에 참여한 게시글이 없습니다.</p>
+          )}
+        </section>
+
+        {/* 다가오는 벙개 */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>⚡ 다가오는 벙개</h2>
+          {!data.upcomingMeetups || data.upcomingMeetups.length === 0 ? (
+            <p className={styles.emptyText}>예정된 벙개가 없습니다.</p>
+          ) : (
+            <div className={styles.postList}>
+              {data.upcomingMeetups.map((m) => (
+                <a key={m.id} className={styles.postItem}
+                  onClick={() => navigate(`/meetups/${m.id}`)} role="link" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/meetups/${m.id}`); }}>
+                  <span className={styles.postTitle}>{m.title}</span>
+                  <span className={styles.postMeta}>
+                    <span>📅 {new Date(m.meet_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', weekday: 'short' })}</span>
+                    {m.location_name && <span>📍 {m.location_name}</span>}
+                    <span>✋ {m.rsvp_count}명</span>
+                  </span>
+                </a>
+              ))}
+            </div>
           )}
         </section>
       </div>

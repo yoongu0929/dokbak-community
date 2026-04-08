@@ -72,3 +72,26 @@ export async function findUserTipRank(
   );
   return result.rows[0] || null;
 }
+
+export interface UpcomingMeetupRow {
+  id: string;
+  title: string;
+  author_nickname: string;
+  meet_date: Date;
+  location_name: string | null;
+  rsvp_count: number;
+}
+
+export async function findUpcomingMeetups(limit: number): Promise<UpcomingMeetupRow[]> {
+  const result = await pool.query<UpcomingMeetupRow>(
+    `SELECT m.id, m.title, u.nickname AS author_nickname, m.meet_date, m.location_name,
+       (SELECT COUNT(*)::int FROM meetup_rsvp r WHERE r.meetup_id = m.id AND r.status = 'attending') AS rsvp_count
+     FROM meetup m
+     JOIN "user" u ON m.author_id = u.id
+     WHERE m.status = 'open' AND m.meet_date >= NOW()
+     ORDER BY m.meet_date ASC
+     LIMIT $1`,
+    [limit]
+  );
+  return result.rows;
+}
