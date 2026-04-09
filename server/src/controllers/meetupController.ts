@@ -53,3 +53,57 @@ export async function deleteMeetup(req: Request, res: Response): Promise<void> {
     res.json({ message: '벙개가 삭제되었습니다' });
   } catch (error) { handleError(error, res); }
 }
+
+export async function getComments(req: Request, res: Response): Promise<void> {
+  try {
+    const meetupId = req.params.id as string;
+    const userId = req.user!.userId;
+
+    const attending = await meetupRepo.isAttending(meetupId, userId);
+    if (!attending) {
+      res.status(403).json({ message: '참석자만 댓글을 볼 수 있습니다' });
+      return;
+    }
+
+    const comments = await meetupRepo.findComments(meetupId);
+    res.json({ comments });
+  } catch (error) { handleError(error, res); }
+}
+
+export async function createComment(req: Request, res: Response): Promise<void> {
+  try {
+    const meetupId = req.params.id as string;
+    const userId = req.user!.userId;
+    const { content } = req.body;
+
+    if (!content?.trim()) {
+      res.status(400).json({ message: '댓글 내용을 입력해주세요' });
+      return;
+    }
+
+    const attending = await meetupRepo.isAttending(meetupId, userId);
+    if (!attending) {
+      res.status(403).json({ message: '참석자만 댓글을 작성할 수 있습니다' });
+      return;
+    }
+
+    const comment = await meetupRepo.createComment(meetupId, userId, content.trim());
+    res.status(201).json(comment);
+  } catch (error) { handleError(error, res); }
+}
+
+export async function deleteComment(req: Request, res: Response): Promise<void> {
+  try {
+    const commentId = req.params.commentId as string;
+    const userId = req.user!.userId;
+
+    const authorId = await meetupRepo.findCommentAuthor(commentId);
+    if (authorId !== userId) {
+      res.status(403).json({ message: '본인의 댓글만 삭제할 수 있습니다' });
+      return;
+    }
+
+    await meetupRepo.deleteComment(commentId);
+    res.json({ message: '댓글이 삭제되었습니다' });
+  } catch (error) { handleError(error, res); }
+}

@@ -126,3 +126,48 @@ export async function findAuthorId(meetupId: string): Promise<string | null> {
   const result = await pool.query('SELECT author_id FROM meetup WHERE id = $1', [meetupId]);
   return result.rows[0]?.author_id || null;
 }
+
+export interface MeetupCommentRow {
+  id: string;
+  meetup_id: string;
+  user_id: string;
+  nickname: string;
+  content: string;
+  created_at: Date;
+}
+
+export async function isAttending(meetupId: string, userId: string): Promise<boolean> {
+  const result = await pool.query(
+    `SELECT id FROM meetup_rsvp WHERE meetup_id = $1 AND user_id = $2 AND status = 'attending'`,
+    [meetupId, userId]
+  );
+  return result.rows.length > 0;
+}
+
+export async function findComments(meetupId: string): Promise<MeetupCommentRow[]> {
+  const result = await pool.query<MeetupCommentRow>(
+    `SELECT c.*, u.nickname FROM meetup_comment c
+     JOIN "user" u ON c.user_id = u.id
+     WHERE c.meetup_id = $1 ORDER BY c.created_at ASC`,
+    [meetupId]
+  );
+  return result.rows;
+}
+
+export async function createComment(meetupId: string, userId: string, content: string): Promise<MeetupCommentRow> {
+  const result = await pool.query<MeetupCommentRow>(
+    `INSERT INTO meetup_comment (meetup_id, user_id, content) VALUES ($1, $2, $3)
+     RETURNING *, (SELECT nickname FROM "user" WHERE id = $2) AS nickname`,
+    [meetupId, userId, content]
+  );
+  return result.rows[0];
+}
+
+export async function deleteComment(commentId: string): Promise<void> {
+  await pool.query('DELETE FROM meetup_comment WHERE id = $1', [commentId]);
+}
+
+export async function findCommentAuthor(commentId: string): Promise<string | null> {
+  const result = await pool.query('SELECT user_id FROM meetup_comment WHERE id = $1', [commentId]);
+  return result.rows[0]?.user_id || null;
+}

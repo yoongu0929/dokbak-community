@@ -23,6 +23,9 @@ export default function MeetupDetailPage() {
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [comments, setComments] = useState<{ id: string; user_id: string; nickname: string; content: string; created_at: string }[]>([]);
+  const [commentText, setCommentText] = useState('');
+  const [commentLoading, setCommentLoading] = useState(false);
 
   const fetchMeetup = useCallback(async () => {
     try {
@@ -33,6 +36,18 @@ export default function MeetupDetailPage() {
   }, [id]);
 
   useEffect(() => { fetchMeetup(); }, [fetchMeetup]);
+
+  // Load comments if attending
+  const fetchComments = useCallback(async () => {
+    try {
+      const { data } = await apiClient.get(`/meetups/${id}/comments`);
+      setComments(data.comments);
+    } catch { /* not attending or error */ }
+  }, [id]);
+
+  useEffect(() => {
+    if (meetup?.user_rsvp === 'attending') fetchComments();
+  }, [meetup?.user_rsvp, fetchComments]);
 
   const handleRsvp = async () => {
     if (toggling || !meetup) return;
@@ -45,6 +60,8 @@ export default function MeetupDetailPage() {
         user_rsvp: data.attending ? 'attending' : null,
       } : prev);
       fetchMeetup();
+      if (data.attending) fetchComments();
+      else setComments([]);
     } catch { /* ignore */ }
     finally { setToggling(false); }
   };
@@ -53,6 +70,24 @@ export default function MeetupDetailPage() {
     try { await apiClient.delete(`/meetups/${id}`); navigate('/meetups', { replace: true }); }
     catch { /* ignore */ }
     setShowDelete(false);
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim() || commentLoading) return;
+    setCommentLoading(true);
+    try {
+      const { data } = await apiClient.post(`/meetups/${id}/comments`, { content: commentText.trim() });
+      setComments((prev) => [...prev, data]);
+      setCommentText('');
+    } catch { /* ignore */ }
+    finally { setCommentLoading(false); }
+  };
+
+  const handleCommentDelete = async (commentId: string) => {
+    try {
+      await apiClient.delete(`/meetups/${id}/comments/${commentId}`);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch { /* ignore */ }
   };
 
   if (loading) return <div className={styles.container}><p className={styles.loading}>로딩 중...</p></div>;
@@ -104,6 +139,38 @@ export default function MeetupDetailPage() {
 
         {isOwner && (
           <button className={styles.deleteBtn} onClick={() => setShowDelete(true)}>벙개 삭제</button>
+        )}
+
+        {/* 댓글 - 참석자만 */}
+        {isAttending && (
+          <div className={styles.commentSection}>
+            <h3 className={styles.commentTitle}>💬 참석자 대화</h3>
+            {comments.length === 0 ? (
+              <p className={styles.commentEmpty}>아직 대화가 없습니다. 첫 메시지를 남겨보세요!</p>
+            ) : (
+              <div className={styles.commentList}>
+                {comments.map((c) => (
+                  <div key={c.id} className={styles.commentItem}>
+                    <div className={styles.commentHeader}>
+                      <span className={styles.commentAuthor}>{c.nickname}</span>
+                      <span className={styles.commentDate}>{new Date(c.created_at).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                      {c.user_id === user?.id && (
+                        <button className={styles.commentDeleteBtn} onClick={() => handleCommentDelete(c.id)}>삭제</button>
+                      )}
+                    </div>
+                    <p className={styles.commentContent}>{c.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className={styles.commentInput}>
+              <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)}
+                placeholder="메시지를 입력하세요" onKeyDown={(e) => { if (e.key === 'Enter') handleCommentSubmit(); }} />
+              <button onClick={handleCommentSubmit} disabled={commentLoading || !commentText.trim()}>
+                {commentLoading ? '...' : '전송'}
+              </button>
+            </div>
+          </div>
         )}
       </div>
       {showDelete && <ConfirmDialog message="정말로 이 벙개를 삭제하시겠습니까?" onConfirm={handleDelete} onCancel={() => setShowDelete(false)} />}
