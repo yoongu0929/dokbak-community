@@ -42,8 +42,12 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [slowLoad, setSlowLoad] = useState(false);
+
   useEffect(() => {
     let cancelled = false;
+    const slowTimer = setTimeout(() => { if (!cancelled) setSlowLoad(true); }, 3000);
+
     async function fetchDashboard() {
       try {
         const res = await apiClient.get('/dashboard');
@@ -51,14 +55,24 @@ export default function DashboardPage() {
       } catch {
         if (!cancelled) setError('대시보드 데이터를 불러오지 못했습니다.');
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) { setLoading(false); clearTimeout(slowTimer); }
       }
     }
     fetchDashboard();
-    return () => { cancelled = true; };
+    return () => { cancelled = true; clearTimeout(slowTimer); };
   }, []);
 
-  if (loading) return <div className={styles.loading}>로딩 중...</div>;
+  if (loading) return (
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.loadingBox}>
+          <div className={styles.spinner} />
+          <p className={styles.loadingText}>데이터를 불러오는 중...</p>
+          {slowLoad && <p className={styles.slowText}>서버가 깨어나는 중입니다. 최대 30초 정도 걸릴 수 있어요 ☕</p>}
+        </div>
+      </div>
+    </div>
+  );
   if (error) return <div className={styles.error}>{error}</div>;
   if (!data) return null;
 
