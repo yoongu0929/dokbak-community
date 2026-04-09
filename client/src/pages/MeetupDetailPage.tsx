@@ -3,6 +3,17 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api/client';
 import { useAuth } from '../hooks/useAuth';
 import { AGE_CATEGORY_MAP } from '../constants/ageCategories';
+
+function toKST(dateStr: string): string {
+  // DB returns timestamp without timezone — treat as UTC
+  const d = dateStr.endsWith('Z') || dateStr.includes('+') ? new Date(dateStr) : new Date(dateStr + 'Z');
+  return d.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function toKSTFull(dateStr: string): string {
+  const d = dateStr.endsWith('Z') || dateStr.includes('+') ? new Date(dateStr) : new Date(dateStr + 'Z');
+  return d.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit' });
+}
 import ConfirmDialog from '../components/ConfirmDialog';
 import styles from './MeetupDetailPage.module.css';
 
@@ -96,9 +107,7 @@ export default function MeetupDetailPage() {
   const isOwner = user?.id === meetup.author_id;
   const isAttending = meetup.user_rsvp === 'attending';
   const isFull = meetup.max_participants ? meetup.rsvp_count >= meetup.max_participants : false;
-  const dateStr = new Date(meetup.meet_date).toLocaleDateString('ko-KR', {
-    timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit',
-  });
+  const dateStr = toKSTFull(meetup.meet_date);
 
   return (
     <div className={styles.container}>
@@ -153,7 +162,7 @@ export default function MeetupDetailPage() {
                   <div key={c.id} className={styles.commentItem}>
                     <div className={styles.commentHeader}>
                       <span className={styles.commentAuthor}>{c.nickname}</span>
-                      <span className={styles.commentDate}>{new Date(c.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className={styles.commentDate}>{toKST(c.created_at)}</span>
                       {c.user_id === user?.id && (
                         <button className={styles.commentDeleteBtn} onClick={() => handleCommentDelete(c.id)}>삭제</button>
                       )}
