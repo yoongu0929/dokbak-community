@@ -3,17 +3,9 @@ import { useAuth } from '../hooks/useAuth';
 import apiClient from '../api/client';
 import styles from './MyPage.module.css';
 
-interface MyRankingPost {
-  postId: string;
-  title: string;
-  likeCount: number;
-  rank: number;
-  createdAt: string;
-}
-
 interface MyRankingData {
   yearMonth: string;
-  posts: MyRankingPost[];
+  myRank: { totalLikes: number; postCount: number; rank: number } | null;
 }
 
 interface Reward {
@@ -76,28 +68,29 @@ export default function MyPage() {
 
         {/* 이번 달 내 꿀팁 순위 */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>🍯 이번 달 내 꿀팁 순위</h2>
-          {myRanking && myRanking.posts.length > 0 ? (
+          <h2 className={styles.sectionTitle}>🏆 이번 달 내 순위</h2>
+          {myRanking?.myRank ? (
             <>
               <p style={{ fontSize: '0.85rem', color: '#666', margin: '0 0 0.5rem' }}>
                 {formatYearMonth(myRanking.yearMonth)}
               </p>
-              <div className={styles.postList}>
-                {myRanking.posts.map((post) => (
-                  <div key={post.postId} className={styles.postItem}>
-                    <span className={styles.postTitle}>
-                      {RANK_MEDALS[post.rank] ?? `${post.rank}위`} {post.title}
-                    </span>
-                    <span className={styles.postMeta}>
-                      <span>❤️ {post.likeCount}</span>
-                      <span>{new Date(post.createdAt).toLocaleDateString('ko-KR')}</span>
-                    </span>
-                  </div>
-                ))}
+              <div className={styles.myRankCard}>
+                <div className={styles.myRankStat}>
+                  <span className={styles.myRankLabel}>순위</span>
+                  <span className={styles.myRankValue}>{RANK_MEDALS[myRanking.myRank.rank] ?? `${myRanking.myRank.rank}위`}</span>
+                </div>
+                <div className={styles.myRankStat}>
+                  <span className={styles.myRankLabel}>총 좋아요</span>
+                  <span className={styles.myRankValue}>❤️ {myRanking.myRank.totalLikes}</span>
+                </div>
+                <div className={styles.myRankStat}>
+                  <span className={styles.myRankLabel}>게시글 수</span>
+                  <span className={styles.myRankValue}>{myRanking.myRank.postCount}개</span>
+                </div>
               </div>
             </>
           ) : (
-            <p className={styles.emptyText}>이번 달 꿀팁 이벤트에 참여한 게시글이 없습니다.</p>
+            <p className={styles.emptyText}>이번 달 게시글이 없습니다.</p>
           )}
         </section>
 

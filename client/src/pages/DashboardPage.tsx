@@ -14,14 +14,13 @@ interface RecentPost {
 }
 
 interface RankingPost {
-  id: string;
-  title: string;
-  author_nickname: string;
-  like_count: number;
+  user_id: string;
+  nickname: string;
+  total_likes: number;
 }
 
 interface MyRanking {
-  likeCount: number;
+  totalLikes: number;
   rank: number;
 }
 
@@ -126,20 +125,20 @@ export default function DashboardPage() {
           />
         </section>
 
-        {/* 이번 달 꿀팁 랭킹 TOP 3 */}
+        {/* 이번 달 유저 랭킹 TOP 3 */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>🍯 이번 달 꿀팁 랭킹</h2>
+          <h2 className={styles.sectionTitle}>� 이번 달 유저 랭킹</h2>
           {data.topRanking.length === 0 ? (
-            <p className={styles.emptyText}>이번 달 꿀팁 게시글이 없습니다.</p>
+            <p className={styles.emptyText}>이번 달 랭킹 데이터가 없습니다.</p>
           ) : (
             <div className={styles.rankList}>
-              {data.topRanking.map((post, idx) => (
-                <div key={post.id} className={styles.rankItem}>
+              {data.topRanking.map((user, idx) => (
+                <div key={user.user_id} className={styles.rankItem}>
                   <span className={styles.rankBadge}>{RANK_MEDALS[idx] ?? `${idx + 1}`}</span>
                   <div className={styles.rankInfo}>
-                    <div className={styles.rankTitle}>{post.title}</div>
+                    <div className={styles.rankTitle}>{user.nickname}</div>
                     <div className={styles.rankMeta}>
-                      {post.author_nickname} · ❤️ {post.like_count}
+                      총 좋아요 ❤️ {user.total_likes}
                     </div>
                   </div>
                 </div>
@@ -150,7 +149,7 @@ export default function DashboardPage() {
 
         {/* 내 순위 */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>내 꿀팁 순위</h2>
+          <h2 className={styles.sectionTitle}>내 순위</h2>
           {data.myRanking ? (
             <div className={styles.myRankCard}>
               <div className={styles.myRankStat}>
@@ -158,12 +157,12 @@ export default function DashboardPage() {
                 <span className={styles.myRankValue}>{data.myRanking.rank}위</span>
               </div>
               <div className={styles.myRankStat}>
-                <span className={styles.myRankLabel}>좋아요 수</span>
-                <span className={styles.myRankValue}>{data.myRanking.likeCount}</span>
+                <span className={styles.myRankLabel}>총 좋아요</span>
+                <span className={styles.myRankValue}>{data.myRanking.totalLikes}</span>
               </div>
             </div>
           ) : (
-            <p className={styles.emptyText}>이번 달 꿀팁 이벤트에 참여한 게시글이 없습니다.</p>
+            <p className={styles.emptyText}>이번 달 게시글이 없습니다.</p>
           )}
         </section>
 

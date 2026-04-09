@@ -28,7 +28,7 @@ export async function getDashboard(userId?: string) {
     if (user) {
       nickname = user.nickname;
       const rank = await dashboardRepository.findUserTipRank(userId, yearMonth);
-      myRankingResult = rank ? { likeCount: rank.like_count, rank: rank.rank } : null;
+      myRankingResult = rank ? { totalLikes: rank.total_likes, rank: rank.rank } : null;
     }
   }
 

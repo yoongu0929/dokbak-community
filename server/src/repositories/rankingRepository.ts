@@ -1,11 +1,10 @@
 import pool from '../db';
 
-export interface RankedTipPostRow {
-  id: string;
-  title: string;
-  author_nickname: string;
-  like_count: number;
-  created_at: Date;
+export interface RankedUserRow {
+  user_id: string;
+  nickname: string;
+  total_likes: number;
+  post_count: number;
   rank: number;
 }
 
@@ -19,25 +18,29 @@ export interface ArchivedRankingRow {
   finalized_at: Date;
 }
 
-export interface UserRankedPostRow {
-  post_id: string;
-  title: string;
-  like_count: number;
+export interface UserRankRow {
+  total_likes: number;
+  post_count: number;
   rank: number;
-  created_at: Date;
 }
 
 export async function findCurrentMonthRanking(
   yearMonth: string
-): Promise<RankedTipPostRow[]> {
-  const result = await pool.query<RankedTipPostRow>(
-    `SELECT p.id, p.title, u.nickname AS author_nickname, p.like_count, p.created_at,
-            ROW_NUMBER() OVER (ORDER BY p.like_count DESC, p.created_at ASC)::int AS rank
-     FROM post p
-     JOIN "user" u ON p.author_id = u.id
-     WHERE p.is_tip_event = TRUE
-       AND TO_CHAR(p.created_at, 'YYYY-MM') = $1
-     ORDER BY p.like_count DESC, p.created_at ASC`,
+): Promise<RankedUserRow[]> {
+  const result = await pool.query<RankedUserRow>(
+    `WITH user_stats AS (
+       SELECT p.author_id AS user_id, u.nickname,
+              SUM(p.like_count)::int AS total_likes,
+              COUNT(*)::int AS post_count
+       FROM post p
+       JOIN "user" u ON p.author_id = u.id
+       WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $1
+       GROUP BY p.author_id, u.nickname
+       HAVING SUM(p.like_count) > 0
+     )
+     SELECT *, ROW_NUMBER() OVER (ORDER BY total_likes DESC, post_count DESC)::int AS rank
+     FROM user_stats
+     ORDER BY total_likes DESC, post_count DESC`,
     [yearMonth]
   );
   return result.rows;
@@ -60,23 +63,26 @@ export async function findArchivedRanking(
   return result.rows;
 }
 
-export async function findUserRankedPosts(
+export async function findUserRank(
   userId: string,
   yearMonth: string
-): Promise<UserRankedPostRow[]> {
-  const result = await pool.query<UserRankedPostRow>(
-    `WITH ranked AS (
-       SELECT p.id AS post_id, p.title, p.like_count, p.created_at, p.author_id,
-              ROW_NUMBER() OVER (ORDER BY p.like_count DESC, p.created_at ASC)::int AS rank
+): Promise<UserRankRow | null> {
+  const result = await pool.query<UserRankRow>(
+    `WITH user_stats AS (
+       SELECT p.author_id AS user_id,
+              SUM(p.like_count)::int AS total_likes,
+              COUNT(*)::int AS post_count
        FROM post p
-       WHERE p.is_tip_event = TRUE
-         AND TO_CHAR(p.created_at, 'YYYY-MM') = $2
+       WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $2
+       GROUP BY p.author_id
+     ),
+     ranked AS (
+       SELECT *, ROW_NUMBER() OVER (ORDER BY total_likes DESC, post_count DESC)::int AS rank
+       FROM user_stats
      )
-     SELECT r.post_id, r.title, r.like_count, r.rank, r.created_at
-     FROM ranked r
-     WHERE r.author_id = $1
-     ORDER BY r.rank ASC`,
+     SELECT total_likes, post_count, rank
+     FROM ranked WHERE user_id = $1`,
     [userId, yearMonth]
   );
-  return result.rows;
+  return result.rows[0] || null;
 }

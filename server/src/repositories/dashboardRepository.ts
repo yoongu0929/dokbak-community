@@ -9,14 +9,13 @@ export interface RecentPostRow {
 }
 
 export interface TipRankingRow {
-  id: string;
-  title: string;
-  author_nickname: string;
-  like_count: number;
+  user_id: string;
+  nickname: string;
+  total_likes: number;
 }
 
 export interface UserTipRankRow {
-  like_count: number;
+  total_likes: number;
   rank: number;
 }
 
@@ -37,12 +36,13 @@ export async function findTopTipPostsForMonth(
   limit: number
 ): Promise<TipRankingRow[]> {
   const result = await pool.query<TipRankingRow>(
-    `SELECT p.id, p.title, u.nickname AS author_nickname, p.like_count
+    `SELECT p.author_id AS user_id, u.nickname, SUM(p.like_count)::int AS total_likes
      FROM post p
      JOIN "user" u ON p.author_id = u.id
-     WHERE p.is_tip_event = TRUE
-       AND TO_CHAR(p.created_at, 'YYYY-MM') = $1
-     ORDER BY p.like_count DESC, p.created_at ASC
+     WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $1
+     GROUP BY p.author_id, u.nickname
+     HAVING SUM(p.like_count) > 0
+     ORDER BY total_likes DESC
      LIMIT $2`,
     [yearMonth, limit]
   );
@@ -53,21 +53,18 @@ export async function findUserTipRank(
   userId: string,
   yearMonth: string
 ): Promise<UserTipRankRow | null> {
-  // Use a window function to rank all tip posts for the month,
-  // then find the best rank among the user's posts
   const result = await pool.query<UserTipRankRow>(
-    `WITH ranked AS (
-       SELECT p.id, p.author_id, p.like_count,
-              ROW_NUMBER() OVER (ORDER BY p.like_count DESC, p.created_at ASC) AS rank
+    `WITH user_stats AS (
+       SELECT p.author_id AS user_id, SUM(p.like_count)::int AS total_likes
        FROM post p
-       WHERE p.is_tip_event = TRUE
-         AND TO_CHAR(p.created_at, 'YYYY-MM') = $2
+       WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $2
+       GROUP BY p.author_id
+     ),
+     ranked AS (
+       SELECT *, ROW_NUMBER() OVER (ORDER BY total_likes DESC)::int AS rank
+       FROM user_stats
      )
-     SELECT r.like_count, r.rank::int
-     FROM ranked r
-     WHERE r.author_id = $1
-     ORDER BY r.rank ASC
-     LIMIT 1`,
+     SELECT total_likes, rank FROM ranked WHERE user_id = $1`,
     [userId, yearMonth]
   );
   return result.rows[0] || null;
