@@ -97,7 +97,7 @@ export default function MeetupDetailPage() {
   const isAttending = meetup.user_rsvp === 'attending';
   const isFull = meetup.max_participants ? meetup.rsvp_count >= meetup.max_participants : false;
   const dateStr = new Date(meetup.meet_date).toLocaleDateString('ko-KR', {
-    year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit',
+    timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit',
   });
 
   return (
@@ -153,7 +153,7 @@ export default function MeetupDetailPage() {
                   <div key={c.id} className={styles.commentItem}>
                     <div className={styles.commentHeader}>
                       <span className={styles.commentAuthor}>{c.nickname}</span>
-                      <span className={styles.commentDate}>{new Date(c.created_at).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className={styles.commentDate}>{new Date(c.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                       {c.user_id === user?.id && (
                         <button className={styles.commentDeleteBtn} onClick={() => handleCommentDelete(c.id)}>삭제</button>
                       )}
