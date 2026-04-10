@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
 import { useAuth } from '../hooks/useAuth';
-import AdSense from '../components/AdSense';
+// import AdSense from '../components/AdSense';
 import styles from './DashboardPage.module.css';
 
 interface RecentPost {
@@ -145,7 +145,7 @@ export default function DashboardPage() {
           )}
         </section>
 
-        {/* 광고 배너 */}
+        {/* 광고 배너 (비활성화)
         <section className={styles.adSection}>
           <AdSense
             adClient="ca-pub-3128921099207231"
@@ -153,6 +153,7 @@ export default function DashboardPage() {
             style={{ minHeight: 90 }}
           />
         </section>
+        */}
 
         {/* 이번 달 유저 랭킹 TOP 3 */}
         <section className={styles.section}>
