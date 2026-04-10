@@ -114,7 +114,7 @@ export default function DashboardPage() {
         {/* 공지 배너 */}
         <div className={styles.noticeBanner} onClick={() => navigate('/notices')} role="link" tabIndex={0}
           onKeyDown={(e) => { if (e.key === 'Enter') navigate('/notices'); }}>
-          📢 공지사항을 확인해주세요
+          >> 공지사항을 확인해주세요
         </div>
 
         {/* 최근 게시글 */}
