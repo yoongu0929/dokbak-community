@@ -1,0 +1,20 @@
+.container { min-height: 100vh; padding: 1.5rem; }
+.content { max-width: 800px; margin: 0 auto; }
+.pageTitle { font-size: 1.5rem; color: var(--text); margin: 0 0 1.5rem; font-weight: 700; }
+.muted { color: var(--text-muted); font-size: 0.85rem; }
+.loading { text-align: center; color: var(--text-muted); padding: 3rem; }
+
+.item {
+  background: var(--card); border-radius: var(--radius); padding: 1rem;
+  box-shadow: var(--shadow); margin-bottom: 0.75rem; border: 1px solid var(--border);
+}
+.itemHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+.itemTitle { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.itemAuthor { font-size: 0.8rem; color: var(--primary); font-weight: 500; }
+.itemContent { font-size: 0.85rem; color: var(--text-secondary); margin: 0.25rem 0 0.5rem; line-height: 1.5; white-space: pre-wrap; }
+.itemFooter { display: flex; justify-content: space-between; align-items: center; }
+.itemDate { font-size: 0.75rem; color: var(--text-muted); }
+.statusSelect {
+  padding: 0.3rem 0.5rem; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 0.8rem; min-height: 32px; cursor: pointer;
+}

@@ -1,0 +1,61 @@
+.container { min-height: 100vh; padding: 1.5rem; }
+.content { max-width: 800px; margin: 0 auto; }
+.pageTitle { font-size: 1.5rem; color: var(--text); margin: 0 0 1.25rem; font-weight: 700; }
+
+.infoBanner {
+  background: linear-gradient(135deg, var(--warm-light), #FFE0B2);
+  border: 1px solid #FFB74D;
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.infoTitle { font-size: 1rem; font-weight: 700; color: #E65100; margin: 0 0 0.5rem; }
+.infoText { font-size: 0.85rem; color: #BF360C; margin: 0; line-height: 1.6; }
+
+.formCard {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+.formTitle { font-size: 1.05rem; color: var(--text); margin: 0 0 1rem; font-weight: 700; }
+.field { margin-bottom: 0.75rem; }
+.field label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; }
+.field input, .field textarea {
+  width: 100%; padding: 0.6rem 0.75rem;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 0.9rem; transition: border-color 0.2s;
+}
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-bg); }
+.field textarea { resize: vertical; line-height: 1.6; }
+
+.submitBtn {
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff; border: none; border-radius: var(--radius-sm);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.submitBtn:disabled { opacity: 0.5; }
+
+.error { color: #e53935; font-size: 0.85rem; background: #FFF0F0; padding: 0.5rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; }
+.success { color: #2e7d32; font-size: 0.85rem; background: var(--success-light); padding: 0.5rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; }
+
+.listSection { margin-top: 1rem; }
+.listTitle { font-size: 1.05rem; color: var(--text); margin: 0 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--primary); font-weight: 700; }
+.muted { color: var(--text-muted); font-size: 0.85rem; }
+
+.suggestionItem {
+  background: var(--card); border-radius: var(--radius); padding: 1rem;
+  box-shadow: var(--shadow); margin-bottom: 0.5rem; border: 1px solid var(--border);
+}
+.suggestionHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+.suggestionTitle { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+.statusBadge { font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 10px; font-weight: 600; }
+.status_pending { background: #FFF3E0; color: #E65100; }
+.status_accepted { background: #E8F5E9; color: #2E7D32; }
+.status_completed { background: var(--primary-bg); color: var(--primary); }
+.status_declined { background: #ECEFF1; color: #546E7A; }
+.suggestionContent { font-size: 0.85rem; color: var(--text-secondary); margin: 0.25rem 0; line-height: 1.5; }
+.suggestionDate { font-size: 0.75rem; color: var(--text-muted); }
