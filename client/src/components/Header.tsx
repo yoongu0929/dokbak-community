@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import styles from './Header.module.css';
 
 export default function Header() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user: authUser } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -39,6 +39,7 @@ export default function Header() {
               <Link to="/meetups" className={styles.navLink}>벙개</Link>
               <Link to="/ranking" className={styles.navLink}>랭킹</Link>
               <Link to="/mypage" className={styles.navLink}>마이페이지</Link>
+              {authUser?.role === 'admin' && <Link to="/admin/notices" className={styles.navLink}>🔧 관리</Link>}
               <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
                 로그아웃
               </button>
@@ -78,6 +79,7 @@ export default function Header() {
             <Link to="/meetups" className={styles.mobileNavLink} onClick={closeMenu}>벙개</Link>
             <Link to="/ranking" className={styles.mobileNavLink} onClick={closeMenu}>랭킹</Link>
             <Link to="/mypage" className={styles.mobileNavLink} onClick={closeMenu}>마이페이지</Link>
+            {authUser?.role === 'admin' && <Link to="/admin/notices" className={styles.mobileNavLink} onClick={closeMenu}>🔧 관리</Link>}
             <button type="button" className={styles.mobileLogoutBtn} onClick={handleLogout}>
               로그아웃
             </button>

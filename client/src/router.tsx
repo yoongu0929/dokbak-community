@@ -15,7 +15,9 @@ import NoticeDetailPage from './pages/NoticeDetailPage';
 import MeetupListPage from './pages/MeetupListPage';
 import MeetupDetailPage from './pages/MeetupDetailPage';
 import MeetupCreatePage from './pages/MeetupCreatePage';
+import AdminNoticePage from './pages/AdminNoticePage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import ResponsiveLayout from './components/ResponsiveLayout';
 
 function AuthLayout() {
@@ -73,6 +75,11 @@ const router = createBrowserRouter([
       {
         path: '/meetups/:id',
         element: <ProtectedRoute><MeetupDetailPage /></ProtectedRoute>,
+      },
+      // 관리자 전용
+      {
+        path: '/admin/notices',
+        element: <AdminRoute><AdminNoticePage /></AdminRoute>,
       },
     ],
   },
