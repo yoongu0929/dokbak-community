@@ -1,4 +1,4 @@
-.container { min-height: 100vh; padding: 1.5rem; background: #f5f5f5; }
+.container { min-height: 100vh; padding: 1.5rem; }
 .content { max-width: 800px; margin: 0 auto; }
 .topBar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .title { font-size: 1.5rem; color: #333; margin: 0; }

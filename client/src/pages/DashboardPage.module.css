@@ -1,4 +1,4 @@
-.container { min-height: 100vh; padding: 1.5rem; background: var(--bg); }
+.container { min-height: 100vh; padding: 1.5rem; }
 .content { max-width: 800px; margin: 0 auto; }
 
 .welcome {

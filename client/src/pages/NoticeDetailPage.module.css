@@ -1,4 +1,4 @@
-.container { min-height: 100vh; padding: 1.5rem; background: #f5f5f5; }
+.container { min-height: 100vh; padding: 1.5rem; }
 .card { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .backLink { font-size: 0.9rem; color: #4a90d9; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .backLink:hover { text-decoration: underline; }
