@@ -5,6 +5,7 @@ export interface UserRow {
   email: string;
   password_hash: string | null;
   nickname: string;
+  role: string;
   oauth_provider: string | null;
   oauth_id: string | null;
   created_at: Date;

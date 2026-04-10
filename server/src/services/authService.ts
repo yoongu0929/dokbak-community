@@ -19,6 +19,7 @@ export function getRefreshTokenStore(): Set<string> {
 export interface TokenPayload {
   userId: string;
   email: string;
+  role: string;
 }
 
 function generateAccessToken(payload: TokenPayload): string {
@@ -64,7 +65,7 @@ export async function login(email: string, password: string) {
     throw new AuthError('이메일 또는 비밀번호가 올바르지 않습니다', 401);
   }
 
-  const payload: TokenPayload = { userId: user.id, email: user.email };
+  const payload: TokenPayload = { userId: user.id, email: user.email, role: user.role };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
 
@@ -73,7 +74,7 @@ export async function login(email: string, password: string) {
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email, nickname: user.nickname },
+    user: { id: user.id, email: user.email, nickname: user.nickname, role: user.role },
   };
 }
 
@@ -97,6 +98,7 @@ export function refresh(refreshToken: string) {
   const newAccessToken = generateAccessToken({
     userId: payload.userId,
     email: payload.email,
+    role: payload.role,
   });
 
   return { accessToken: newAccessToken };
@@ -113,7 +115,7 @@ export async function oauthLogin(email: string, nickname: string, provider: stri
     }
   }
 
-  const payload: TokenPayload = { userId: user.id, email: user.email };
+  const payload: TokenPayload = { userId: user.id, email: user.email, role: user.role };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
   refreshTokenStore.add(refreshToken);
@@ -121,7 +123,7 @@ export async function oauthLogin(email: string, nickname: string, provider: stri
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email, nickname: user.nickname },
+    user: { id: user.id, email: user.email, nickname: user.nickname, role: user.role },
   };
 }
 

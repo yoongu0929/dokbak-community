@@ -6,6 +6,7 @@ interface User {
   id: string;
   email: string;
   nickname: string;
+  role: string;
 }
 
 interface AuthContextValue {
