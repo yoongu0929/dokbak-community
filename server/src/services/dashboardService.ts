@@ -32,10 +32,11 @@ export async function getDashboard(userId?: string) {
     }
   }
 
-  const [recentPosts, topRanking, upcomingMeetups] = await Promise.all([
+  const [recentPosts, topRanking, upcomingMeetups, stats] = await Promise.all([
     dashboardRepository.findRecentPosts(5),
     dashboardRepository.findTopTipPostsForMonth(yearMonth, 3),
     dashboardRepository.findUpcomingMeetups(3),
+    dashboardRepository.getCommunityStats(),
   ]);
 
   return {
@@ -44,5 +45,10 @@ export async function getDashboard(userId?: string) {
     topRanking,
     myRanking: myRankingResult,
     upcomingMeetups,
+    stats: {
+      userCount: stats.user_count,
+      postCount: stats.post_count,
+      meetupCount: stats.meetup_count,
+    },
   };
 }

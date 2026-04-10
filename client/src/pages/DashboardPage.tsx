@@ -30,6 +30,7 @@ interface DashboardData {
   topRanking: RankingPost[];
   myRanking: MyRanking | null;
   upcomingMeetups: { id: string; title: string; author_nickname: string; meet_date: string; location_name: string | null; rsvp_count: number }[];
+  stats: { userCount: number; postCount: number; meetupCount: number };
 }
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
@@ -81,6 +82,34 @@ export default function DashboardPage() {
     <div className={styles.container}>
       <div className={styles.content}>
         <h1 className={styles.welcome}>{nickname}님, 환영합니다!</h1>
+
+        {/* 커뮤니티 통계 */}
+        {data.stats && (
+          <div className={styles.statsRow}>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{data.stats.userCount}</span>
+              <span className={styles.statLabel}>👥 회원</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{data.stats.postCount}</span>
+              <span className={styles.statLabel}>📝 게시글</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statValue}>{data.stats.meetupCount}</span>
+              <span className={styles.statLabel}>⚡ 벙개</span>
+            </div>
+          </div>
+        )}
+
+        {/* 100명 미만 안내 */}
+        {data.stats && data.stats.userCount < 100 && (
+          <div className={styles.milestone}>
+            🎯 회원 {data.stats.userCount}/100명 — 100명 달성 시 랭킹 리워드 이벤트가 시작됩니다!
+            <div className={styles.progressBar}>
+              <div className={styles.progressFill} style={{ width: `${Math.min(data.stats.userCount, 100)}%` }} />
+            </div>
+          </div>
+        )}
 
         {/* 공지 배너 */}
         <div className={styles.noticeBanner} onClick={() => navigate('/notices')} role="link" tabIndex={0}

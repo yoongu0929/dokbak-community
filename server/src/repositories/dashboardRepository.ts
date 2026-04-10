@@ -92,3 +92,19 @@ export async function findUpcomingMeetups(limit: number): Promise<UpcomingMeetup
   );
   return result.rows;
 }
+
+export interface CommunityStatsRow {
+  user_count: number;
+  post_count: number;
+  meetup_count: number;
+}
+
+export async function getCommunityStats(): Promise<CommunityStatsRow> {
+  const result = await pool.query<CommunityStatsRow>(
+    `SELECT
+       (SELECT COUNT(*)::int FROM "user") AS user_count,
+       (SELECT COUNT(*)::int FROM post) AS post_count,
+       (SELECT COUNT(*)::int FROM meetup WHERE status = 'open') AS meetup_count`
+  );
+  return result.rows[0];
+}
