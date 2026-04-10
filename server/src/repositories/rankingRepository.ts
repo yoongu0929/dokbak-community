@@ -35,6 +35,7 @@ export async function findCurrentMonthRanking(
        FROM post p
        JOIN "user" u ON p.author_id = u.id
        WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $1
+         AND u.role != 'admin'
        GROUP BY p.author_id, u.nickname
        HAVING SUM(p.like_count) > 0
      )
@@ -73,7 +74,9 @@ export async function findUserRank(
               SUM(p.like_count)::int AS total_likes,
               COUNT(*)::int AS post_count
        FROM post p
+       JOIN "user" u ON p.author_id = u.id
        WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $2
+         AND u.role != 'admin'
        GROUP BY p.author_id
      ),
      ranked AS (

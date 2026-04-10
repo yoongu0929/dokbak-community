@@ -40,6 +40,7 @@ export async function findTopTipPostsForMonth(
      FROM post p
      JOIN "user" u ON p.author_id = u.id
      WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $1
+       AND u.role != 'admin'
      GROUP BY p.author_id, u.nickname
      HAVING SUM(p.like_count) > 0
      ORDER BY total_likes DESC
@@ -57,7 +58,9 @@ export async function findUserTipRank(
     `WITH user_stats AS (
        SELECT p.author_id AS user_id, SUM(p.like_count)::int AS total_likes
        FROM post p
+       JOIN "user" u ON p.author_id = u.id
        WHERE TO_CHAR(p.created_at, 'YYYY-MM') = $2
+         AND u.role != 'admin'
        GROUP BY p.author_id
      ),
      ranked AS (
