@@ -34,19 +34,24 @@ export default function MyPage() {
   const [rewards, setRewards] = useState<RewardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [kakaoId, setKakaoId] = useState('');
+  const [kakaoSaved, setKakaoSaved] = useState(false);
+  const [kakaoSaving, setKakaoSaving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     async function fetchData() {
       try {
-        const [rankingRes, rewardRes] = await Promise.all([
+        const [rankingRes, rewardRes, profileRes] = await Promise.all([
           apiClient.get('/ranking/my'),
           apiClient.get('/rewards/my'),
+          apiClient.get('/profile/me'),
         ]);
         if (!cancelled) {
           setMyRanking(rankingRes.data);
           setRewards(rewardRes.data);
+          setKakaoId(profileRes.data.kakaoId || '');
         }
       } catch {
         if (!cancelled) setError('데이터를 불러오지 못했습니다.');
@@ -117,6 +122,36 @@ export default function MyPage() {
           ) : (
             <p className={styles.emptyText}>아직 받은 리워드가 없습니다.</p>
           )}
+        </section>
+
+        {/* 카카오 ID (리워드 수령용) */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>💬 카카오톡 ID</h2>
+          <p className={styles.kakaoDesc}>랭킹 리워드(기프티콘)를 받기 위해 카카오톡 ID를 등록해주세요.</p>
+          <div className={styles.kakaoInputRow}>
+            <input
+              type="text"
+              className={styles.kakaoInput}
+              value={kakaoId}
+              onChange={(e) => { setKakaoId(e.target.value); setKakaoSaved(false); }}
+              placeholder="카카오톡 ID를 입력하세요"
+            />
+            <button
+              className={styles.kakaoSaveBtn}
+              disabled={kakaoSaving}
+              onClick={async () => {
+                setKakaoSaving(true);
+                try {
+                  await apiClient.put('/profile/me/kakao-id', { kakaoId: kakaoId.trim() });
+                  setKakaoSaved(true);
+                } catch { /* ignore */ }
+                finally { setKakaoSaving(false); }
+              }}
+            >
+              {kakaoSaving ? '저장 중...' : '저장'}
+            </button>
+          </div>
+          {kakaoSaved && <p className={styles.kakaoSavedMsg}>✅ 저장되었습니다</p>}
         </section>
       </div>
     </div>

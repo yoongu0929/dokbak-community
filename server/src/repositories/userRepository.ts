@@ -63,3 +63,11 @@ export async function createOAuthUser(
   );
   return result.rows[0];
 }
+
+export async function updateKakaoId(userId: string, kakaoId: string | null): Promise<UserRow> {
+  const result = await pool.query<UserRow>(
+    `UPDATE "user" SET kakao_id = $2, updated_at = NOW() WHERE id = $1 RETURNING *`,
+    [userId, kakaoId]
+  );
+  return result.rows[0];
+}
