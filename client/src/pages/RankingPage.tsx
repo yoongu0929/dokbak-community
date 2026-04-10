@@ -53,7 +53,7 @@ export default function RankingPage() {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h1 className={styles.title}>🏆 이번 달 유저 랭킹</h1>
+          <h1 className={styles.title}>⭐ 이번 달 유저 랭킹</h1>
           <a className={styles.archiveLink} onClick={() => {
             const now = new Date();
             const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);

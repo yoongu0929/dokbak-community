@@ -73,7 +73,7 @@ export default function MyPage() {
 
         {/* 이번 달 내 꿀팁 순위 */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>🏆 이번 달 내 순위</h2>
+          <h2 className={styles.sectionTitle}>⭐ 이번 달 내 순위</h2>
           {myRanking?.myRank ? (
             <>
               <p style={{ fontSize: '0.85rem', color: '#666', margin: '0 0 0.5rem' }}>

@@ -157,7 +157,7 @@ export default function DashboardPage() {
 
         {/* 이번 달 유저 랭킹 TOP 3 */}
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>� 이번 달 유저 랭킹</h2>
+          <h2 className={styles.sectionTitle}>⭐ 이번 달 유저 랭킹</h2>
           {data.topRanking.length === 0 ? (
             <p className={styles.emptyText}>이번 달 랭킹 데이터가 없습니다.</p>
           ) : (
